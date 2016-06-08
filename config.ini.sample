@@ -1,0 +1,6 @@
+[DEFAULT]
+discovery.uri=http://localhost:8080
+node.environment=production
+node.pool=general
+[metadata-1]
+property.jdbc=jdbc:mysql://localhost/raptor?user=root
