@@ -2,7 +2,7 @@ import uuid
 import urlparse
 import httplib
 import socket
-from twest import config
+import ConfigParser
 
 try:
     import simplejson as json
@@ -12,21 +12,26 @@ except ImportError:
 def uuid_gen():
     return str(uuid.uuid1())
 
-conf = config.get_config('announcer')
-defaults = conf.get_configs('DEFAULT')
 this_host = socket.gethostname()
-default_node_id = defaults.get('node.id', uuid_gen())
-default_node_environment = defaults.get('node.environment', "production")
-default_node_pool = defaults.get('node.pool')
-default_discovery_uri = defaults.get('discovery.uri')
 
 service_ids = {}
 
-def on_timer():
-    for section in conf.sections():
-        if section == '_service':
+def on_timer(options):
+    config = ConfigParser.ConfigParser();
+    config.read(options['conf'])
+
+    defaults = dict(config.items('DEFAULT'))
+    default_node_id = defaults.get('node.id', uuid_gen())
+    default_node_environment = defaults.get('node.environment', "production")
+    default_node_pool = defaults.get('node.pool', 'general')
+    default_discovery_uri = defaults.get('discovery.uri')
+
+    print 'zzzzz', defaults
+
+    for section in config.sections():
+        if section == 'DEFAULT':
             continue
-        confs = conf.get_configs(section)
+        confs = dict(config.items(section))
   
         service_id = confs.get('id', service_ids.get(section, uuid_gen()))
         service_ids[section] = service_id
