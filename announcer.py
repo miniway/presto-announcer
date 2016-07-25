@@ -26,8 +26,6 @@ def on_timer(options):
     default_node_pool = defaults.get('node.pool', 'general')
     default_discovery_uri = defaults.get('discovery.uri')
 
-    print 'zzzzz', defaults
-
     for section in config.sections():
         if section == 'DEFAULT':
             continue
